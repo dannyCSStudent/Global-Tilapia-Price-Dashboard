@@ -16,10 +16,13 @@
     "@tailwindcss/forms": "^0.5.8",
     "@types/three": "^0.168.0",
     "autoprefixer": "^10.4.20",
+    "echarts": "^5.5.1",
+    "echarts-for-react": "^3.0.2",
     "next": "14.2.7",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
+    "recharts": "^2.12.7",
     "three": "^0.168.0"
   },
   "devDependencies": {

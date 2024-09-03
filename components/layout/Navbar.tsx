@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
+import dynamic from 'next/dynamic';
+
+const SunIcon = dynamic(() => import('@heroicons/react/24/solid/SunIcon'));
+const MoonIcon = dynamic(() => import('@heroicons/react/24/solid/MoonIcon'));
 
 const Navbar: React.FC = () => {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-lg">
@@ -22,16 +30,18 @@ const Navbar: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center">
-            <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              {theme === 'dark' ? (
-                <SunIcon className="h-6 w-6" aria-hidden="true" />
-              ) : (
-                <MoonIcon className="h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                {theme === 'dark' ? (
+                  <SunIcon className="h-6 w-6" aria-hidden="true" />
+                ) : (
+                  <MoonIcon className="h-6 w-6" aria-hidden="true" />
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>

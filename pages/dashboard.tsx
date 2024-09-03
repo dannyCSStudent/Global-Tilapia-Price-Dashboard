@@ -1,5 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
+import PriceChart from '../components/dashboard/PriceChart';
+import NewsWidget from '../components/dashboard/NewsWidget';
+import AlertSettings from '../components/dashboard/AlertSettings';
 
 const Dashboard: React.FC = () => {
   return (
@@ -13,15 +16,15 @@ const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Real-Time Prices</h2>
-            {/* We'll add the PriceChart component here later */}
+            <PriceChart />
           </div>
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Market News</h2>
-            {/* We'll add the NewsWidget component here later */}
+            <NewsWidget />
           </div>
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Price Alerts</h2>
-            {/* We'll add the AlertSettings component here later */}
+            <AlertSettings />
           </div>
         </div>
       </div>
