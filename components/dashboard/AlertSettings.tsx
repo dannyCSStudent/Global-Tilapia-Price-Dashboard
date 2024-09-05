@@ -1,40 +1,70 @@
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const AlertSettings: React.FC = () => {
-  const [priceThreshold, setPriceThreshold] = useState<string>('');
+interface AlertSetting {
+  threshold: number;
+  isAbove: boolean;
+}
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real application, this would send the alert settings to a backend service
-    console.log(`Alert set for price: $${priceThreshold}`);
+const CustomAlerts: React.FC = () => {
+  const [alerts, setAlerts] = useState<AlertSetting[]>([]);
+  const [threshold, setThreshold] = useState<string>('');
+  const [isAbove, setIsAbove] = useState<boolean>(true);
+
+  const addAlert = () => {
+    const numThreshold = parseFloat(threshold);
+    if (!isNaN(numThreshold)) {
+      setAlerts([...alerts, { threshold: numThreshold, isAbove }]);
+      setThreshold('');
+    }
+  };
+
+  const removeAlert = (index: number) => {
+    setAlerts(alerts.filter((_, i) => i !== index));
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="price-threshold" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Price Threshold ($)
-        </label>
-        <input
-          type="number"
-          id="price-threshold"
-          value={priceThreshold}
-          onChange={(e) => setPriceThreshold(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          placeholder="Enter price threshold"
-          step="0.01"
-          min="0"
-          required
-        />
-      </div>
-      <button
-        type="submit"
-        className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
-        Set Alert
-      </button>
-    </form>
+    <Card>
+      <CardHeader>
+        <CardTitle>Custom Price Alerts</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex space-x-2 mb-4">
+          <Input
+            type="number"
+            value={threshold}
+            onChange={(e) => setThreshold(e.target.value)}
+            placeholder="Set price threshold"
+          />
+          <select
+            value={isAbove ? 'above' : 'below'}
+            onChange={(e) => setIsAbove(e.target.value === 'above')}
+            className="border rounded p-2"
+          >
+            <option value="above">Above</option>
+            <option value="below">Below</option>
+          </select>
+          <Button onClick={addAlert}>Add Alert</Button>
+        </div>
+        <div className="space-y-2">
+          {alerts.map((alert, index) => (
+            <Alert key={index}>
+              <AlertTitle>Price Alert</AlertTitle>
+              <AlertDescription>
+                Alert when price goes {alert.isAbove ? 'above' : 'below'} ${alert.threshold.toFixed(2)}
+                <Button variant="outline" size="sm" className="ml-2" onClick={() => removeAlert(index)}>
+                  Remove
+                </Button>
+              </AlertDescription>
+            </Alert>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
-export default AlertSettings;
+export default CustomAlerts;

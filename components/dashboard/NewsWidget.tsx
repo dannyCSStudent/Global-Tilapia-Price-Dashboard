@@ -1,4 +1,6 @@
+// components/NewsWidget.tsx
 import React, { useState, useEffect, useCallback } from 'react';
+import CacheService from '../../lib/cacheService';
 
 interface NewsItem {
   title: string;
@@ -6,12 +8,22 @@ interface NewsItem {
   url: string;
 }
 
+const CACHE_KEY = 'tilapia_news_data';
+const CACHE_TTL = 15 * 60 * 1000; // 15 minutes in milliseconds
+
 const NewsWidget: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchNews = useCallback(async (retries = 3) => {
+    const cachedNews = CacheService.getItem(CACHE_KEY);
+    if (cachedNews) {
+      setNews(cachedNews);
+      setIsLoading(false);
+      return;
+    }
+
     const newsApiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
     try {
       setIsLoading(true);
@@ -22,6 +34,7 @@ const NewsWidget: React.FC = () => {
       }
       const jsonData = await response.json();
       setNews(jsonData.articles);
+      CacheService.setItem(CACHE_KEY, jsonData.articles, CACHE_TTL);
     } catch (err) {
       console.error('Error fetching news:', err);
       if (retries > 0) {
